@@ -1,21 +1,27 @@
 <?php
 
-namespace AbaFileGenerator\Generator;
+namespace AbaIntFileGenerator\Generator;
 
-use AbaFileGenerator\Model\TransactionInterface;
-use AbaFileGenerator\Model\TransactionCode;
-use \Exception;
 
-class AbaFileGenerator
+class AbaIntFileGenerator
 {
-    const DESCRIPTIVE_TYPE = '0';
-    const DETAIL_TYPE = '1';
-    const BATCH_TYPE = '7';
+    const HEADER_RECORD = '01';
+    const PAYMENT_HEADER = '02';
+    const PAYMENT_RECORD = '03';
+    const PAYMENT_DETAIL_RECORD = '55';
+    const PAYMENT_TRAILER_RECORD = '79';
+    const PAYMENT_TRAILER = '89';
+    const FILE_TRAILER_RECORD = '99';
 
     /**
      * @var string - aba file string
      */
     private $abaString = '';
+
+    /**
+     * @var integer - running total of messages in file
+     */
+    private $messageNumber = 0;
 
     /**
      * @var integer - running total of credits in file
@@ -118,48 +124,52 @@ class AbaFileGenerator
     }
 
     /**
-     * Create the descriptive record line of the file.
+     * Create the header record line of the file.
      */
-    private function addDescriptiveRecord()
+    private function addHeaderRecord()
     {
         // Record Type
-        $line = self::DESCRIPTIVE_TYPE;
+        $line = self::HEADER_RECORD;
 
-        // BSB
-        $line .= $this->bsb;
+        // File name, must be blank
+        $line .= str_repeat(' ', 20);
 
-        // Account Number
-        $line .= str_pad($this->accountNumber, 9, ' ', STR_PAD_LEFT);
+        //Number of messages
+        $line .= str_pad($this->messageNumber, 3, '0', STR_PAD_LEFT);
 
-        // Reserved - must be a single blank space
-        $line .= ' ';
+        $this->addLine($line);
+    }
 
-        // Sequence Number
-        $line .= '01';
+    /**
+     * Create the header record line of the file.
+     */
+    private function addPaymentHeader()
+    {
+        // Record Type
+        $line = self::PAYMENT_HEADER;
 
-        // Bank Name
-        $line .= $this->bankName;
+        // File name, must be blank
+        $line .= 'IFT';
 
-        // Reserved - must be seven blank spaces
-        $line .= str_repeat(' ', 7);
+        //Number of messages
+        $line .= '0001';
 
-        // User Name
-        $line .= str_pad($this->userName, 26, ' ', STR_PAD_RIGHT);
+        $this->addLine($line);
+    }
 
-        // User ID
-        $line .= $this->directEntryUserId;
+    /**
+     * Create the header record line of the file.
+     */
+    private function addPaymentRecord()
+    {
+        // Record Type
+        $line = self::PAYMENT_RECORD;
 
-        // File Description
-        $line .= str_pad($this->description, 12, ' ', STR_PAD_RIGHT);
+        // File name, must be blank
+        $line .= 'IFT';
 
-        // Processing Date
-        $line .= date('dmy');
-
-        // Processing Time
-        $line .= str_repeat(' ', 4);
-
-        // Reserved - 36 blank spaces
-        $line .= str_repeat(' ', 36);
+        //Number of messages
+        $line .= '0001';
 
         $this->addLine($line);
     }
