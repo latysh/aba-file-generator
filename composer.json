@@ -12,7 +12,9 @@
         "squizlabs/PHP_CodeSniffer": "1.*"
     },
     "autoload": {
-        "psr-0": { "AbaFileGenerator\\": "" }
-    },
-    "target-dir": "AbaFileGenerator"
+        "psr-4": {
+          "AbaFileGenerator\\": "",
+          "NabAbaIntFileGenerator\\": ""
+        }
+    }
 }
