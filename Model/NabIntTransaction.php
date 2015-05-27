@@ -1,11 +1,10 @@
 <?php
 
-namespace AbaIntFileGenerator\Model;
+namespace NabAbaIntFileGenerator\Model;
 
-use AbaIntFileGenerator\Model;
+use NabAbaIntFileGenerator\Model;
 
-class IntTransaction implements IntTransactionInterface
-{
+class NabIntTransaction implements NabIntTransactionInterface {
     private $currency;
     private $paymentAmount;
     private $date;
@@ -19,34 +18,24 @@ class IntTransaction implements IntTransactionInterface
     private $beneficiaryBankAddress1;
     private $beneficiaryBankAddress2;
     private $beneficiaryBankAddress3;
+    private $overseasBankCharges;
+    private $remitterName;
+    private $refinanceDays;
+    private $refinanceDate;
     private $additionalBeneficiaryInstructions1;
     private $additionalBeneficiaryInstructions2;
     private $additionalBeneficiaryInstructions3;
     private $additionalBeneficiaryInstructions4;
+    private $additionalInstructionsToNab;
     private $beneficiaryBankCountryCode;
     private $swift;
-    private $paymentMethod;
-    private $paymentLegCurrencyCode;
-    private $paymentLegAmount;
-    private $debitAccountBsb;
-    private $debitAccountNumber;
-    private $debitCurrencyCode;
-    private $debitAmount;
-    private $refinanceIndicator;
-
-    /**
-     * @return mixed
-     */
-    public function getRefinanceIndicator() {
-        return $this->refinanceIndicator;
-    }
-
-    /**
-     * @param mixed $refinanceIndicator
-     */
-    public function setRefinanceIndicator($refinanceIndicator) {
-        $this->refinanceIndicator = $refinanceIndicator;
-    }
+    private $routingType;
+    private $routingCode;
+    private $originatingApplicantDetails1;
+    private $originatingApplicantDetails2;
+    private $originatingApplicantDetails3;
+    private $originatingApplicantDetails4;
+    private $numberOfDetailRecords;
 
     /**
      * @return mixed
@@ -233,6 +222,62 @@ class IntTransaction implements IntTransactionInterface
     /**
      * @return mixed
      */
+    public function getOverseasBankCharges() {
+        return $this->overseasBankCharges;
+    }
+
+    /**
+     * @param mixed $overseasBankCharges
+     */
+    public function setOverseasBankCharges($overseasBankCharges) {
+        $this->overseasBankCharges = $overseasBankCharges;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemitterName() {
+        return $this->remitterName;
+    }
+
+    /**
+     * @param mixed $remitterName
+     */
+    public function setRemitterName($remitterName) {
+        $this->remitterName = $remitterName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRefinanceDays() {
+        return $this->refinanceDays;
+    }
+
+    /**
+     * @param mixed $refinanceDays
+     */
+    public function setRefinanceDays($refinanceDays) {
+        $this->refinanceDays = $refinanceDays;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRefinanceDate() {
+        return $this->refinanceDate;
+    }
+
+    /**
+     * @param mixed $refinanceDate
+     */
+    public function setRefinanceDate($refinanceDate) {
+        $this->refinanceDate = $refinanceDate;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAdditionalBeneficiaryInstructions1() {
         return $this->additionalBeneficiaryInstructions1;
     }
@@ -289,6 +334,20 @@ class IntTransaction implements IntTransactionInterface
     /**
      * @return mixed
      */
+    public function getAdditionalInstructionsToNab() {
+        return $this->additionalInstructionsToNab;
+    }
+
+    /**
+     * @param mixed $additionalInstructionsToNab
+     */
+    public function setAdditionalInstructionsToNab($additionalInstructionsToNab) {
+        $this->additionalInstructionsToNab = $additionalInstructionsToNab;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getBeneficiaryBankCountryCode() {
         return $this->beneficiaryBankCountryCode;
     }
@@ -317,98 +376,100 @@ class IntTransaction implements IntTransactionInterface
     /**
      * @return mixed
      */
-    public function getPaymentMethod() {
-        return $this->paymentMethod;
+    public function getRoutingType() {
+        return $this->routingType;
     }
 
     /**
-     * @param mixed $paymentMethod
+     * @param mixed $routingType
      */
-    public function setPaymentMethod($paymentMethod) {
-        $this->paymentMethod = $paymentMethod;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPaymentLegCurrencyCode() {
-        return $this->paymentLegCurrencyCode;
-    }
-
-    /**
-     * @param mixed $paymentLegCurrencyCode
-     */
-    public function setPaymentLegCurrencyCode($paymentLegCurrencyCode) {
-        $this->paymentLegCurrencyCode = $paymentLegCurrencyCode;
+    public function setRoutingType($routingType) {
+        $this->routingType = $routingType;
     }
 
     /**
      * @return mixed
      */
-    public function getPaymentLegAmount() {
-        return $this->paymentLegAmount;
+    public function getRoutingCode() {
+        return $this->routingCode;
     }
 
     /**
-     * @param mixed $paymentLegAmount
+     * @param mixed $routingCode
      */
-    public function setPaymentLegAmount($paymentLegAmount) {
-        $this->paymentLegAmount = $paymentLegAmount;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDebitAccountBsb() {
-        return $this->debitAccountBsb;
-    }
-
-    /**
-     * @param mixed $debitAccountBsb
-     */
-    public function setDebitAccountBsb($debitAccountBsb) {
-        $this->debitAccountBsb = $debitAccountBsb;
+    public function setRoutingCode($routingCode) {
+        $this->routingCode = $routingCode;
     }
 
     /**
      * @return mixed
      */
-    public function getDebitAccountNumber() {
-        return $this->debitAccountNumber;
+    public function getOriginatingApplicantDetails1() {
+        return $this->originatingApplicantDetails1;
     }
 
     /**
-     * @param mixed $debitAccountNumber
+     * @param mixed $originatingApplicantDetails1
      */
-    public function setDebitAccountNumber($debitAccountNumber) {
-        $this->debitAccountNumber = $debitAccountNumber;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDebitCurrencyCode() {
-        return $this->debitCurrencyCode;
-    }
-
-    /**
-     * @param mixed $debitCurrencyCode
-     */
-    public function setDebitCurrencyCode($debitCurrencyCode) {
-        $this->debitCurrencyCode = $debitCurrencyCode;
+    public function setOriginatingApplicantDetails1($originatingApplicantDetails1) {
+        $this->originatingApplicantDetails1 = $originatingApplicantDetails1;
     }
 
     /**
      * @return mixed
      */
-    public function getDebitAmount() {
-        return $this->debitAmount;
+    public function getOriginatingApplicantDetails2() {
+        return $this->originatingApplicantDetails2;
     }
 
     /**
-     * @param mixed $debitAmount
+     * @param mixed $originatingApplicantDetails2
      */
-    public function setDebitAmount($debitAmount) {
-        $this->debitAmount = $debitAmount;
+    public function setOriginatingApplicantDetails2($originatingApplicantDetails2) {
+        $this->originatingApplicantDetails2 = $originatingApplicantDetails2;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginatingApplicantDetails3() {
+        return $this->originatingApplicantDetails3;
+    }
+
+    /**
+     * @param mixed $originatingApplicantDetails3
+     */
+    public function setOriginatingApplicantDetails3($originatingApplicantDetails3) {
+        $this->originatingApplicantDetails3 = $originatingApplicantDetails3;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginatingApplicantDetails4() {
+        return $this->originatingApplicantDetails4;
+    }
+
+    /**
+     * @param mixed $originatingApplicantDetails4
+     */
+    public function setOriginatingApplicantDetails4($originatingApplicantDetails4) {
+        $this->originatingApplicantDetails4 = $originatingApplicantDetails4;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumberOfDetailRecords() {
+        return $this->numberOfDetailRecords;
+    }
+
+    /**
+     * @param mixed $numberOfDetailRecords
+     */
+    public function setNumberOfDetailRecords($numberOfDetailRecords) {
+        $this->numberOfDetailRecords = $numberOfDetailRecords;
+    }
+
+
 }

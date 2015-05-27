@@ -1,8 +1,8 @@
 <?php
 
-namespace AbaIntFileGenerator\Model;
+namespace NabAbaIntFileGenerator\Model;
 
-interface IntTransactionInterface {
+interface NabIntTransactionInterface {
 
     /**
      * Bank account name for this transaction.
@@ -101,39 +101,4 @@ interface IntTransactionInterface {
      * @return string
      */
     public function getBeneficiaryBankCountryCode();
-
-    /**
-     * Return payment method.
-     *
-     * @return string
-     */
-    public function getPaymentMethod();
-
-    /**
-     * Return Payment Leg Currency Code
-     *
-     * @return string
-     */
-    public function getPaymentLegCurrencyCode();
-
-    /**
-     * Return Payment Leg Currency Code
-     *
-     * @return string
-     */
-    public function getPaymentLegAmount();
-
-    /**
-     * Return Debit Account BSB. Debit Account must be a NAB Account registered to NAB Connect.
-     *
-     * @return string
-     */
-    public function getDebitAccountBsb();
-
-    /**
-     * Return Refinance Indicator
-     *
-     * @return integer
-     */
-    public function getRefinanceIndicator();
 }
