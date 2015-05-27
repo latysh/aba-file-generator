@@ -56,6 +56,7 @@ class NabAbaIntFileGenerator {
         if (!is_array($transactions)) {
             $transactions = array($transactions);
         }
+        $this->numberRecords = count($transactions);
 
         $this->addHeaderRecord();
         $this->addPaymentHeader();
@@ -63,7 +64,6 @@ class NabAbaIntFileGenerator {
         foreach ($transactions as $transaction) {
             $this->validatePaymentRecord($transaction);
             //set (debitor) variables depending on currency of payment
-            $this->debitAmount = $transaction->getPaymentAmount();
             $this->debitCurrencyCode = $transaction->getCurrency();
             $this->debitAccountBsb = $this->accounts[$transaction->getCurrency()]['bsb'];
             $this->debitAccountNumber = $this->accounts[$transaction->getCurrency()]['account_number'];
@@ -73,11 +73,10 @@ class NabAbaIntFileGenerator {
 
             $this->validatePaymentDetailRecord($transaction);
             $this->addPaymentDetailRecord($transaction);
-        }
 
-        $this->numberRecords = count($transactions);
-        $this->addPaymentTrailerRecord();
-        $this->addPaymentTrailer();
+            $this->addPaymentTrailerRecord();
+            $this->addPaymentTrailer();
+        }
         $this->addFileTrailerRecord();
 
         return $this->abaString;
@@ -152,16 +151,16 @@ class NabAbaIntFileGenerator {
         $line .= str_pad($transaction->getBeneficiaryAccountNumber(), 34, ' ', STR_PAD_RIGHT);
 
         //Beneficiary bank name
-        $line .= str_pad($transaction->getBeneficiaryAccountNumber(), 35, ' ', STR_PAD_RIGHT);
+        $line .= str_pad($transaction->getBeneficiaryBankName(), 35, ' ', STR_PAD_RIGHT);
 
         //Beneficiary beneficiary bank address1
-        $line .= str_pad($transaction->getBeneficiaryAddress1(), 35, ' ', STR_PAD_RIGHT);
+        $line .= str_pad($transaction->getBeneficiaryBankAddress1(), 35, ' ', STR_PAD_RIGHT);
 
         //Beneficiary beneficiary bank address2
-        $line .= str_pad($transaction->getBeneficiaryAddress2(), 35, ' ', STR_PAD_RIGHT);
+        $line .= str_pad($transaction->getBeneficiaryBankAddress2(), 35, ' ', STR_PAD_RIGHT);
 
         //Beneficiary beneficiary bank address3
-        $line .= str_pad($transaction->getBeneficiaryAddress3(), 35, ' ', STR_PAD_RIGHT);
+        $line .= str_pad($transaction->getBeneficiaryBankAddress3(), 35, ' ', STR_PAD_RIGHT);
 
         //Purpose of the remittance
         $line .= '   ';
@@ -233,40 +232,40 @@ class NabAbaIntFileGenerator {
         $line = self::PAYMENT_DETAIL_RECORD;
 
         // Payment Method
-        $line .= $transaction->getPaymentMethod();
+        $line .= $this->paymentMethod;
 
         // Payment Leg Currency Code
-        $line .= $transaction->getPaymentLegCurrencyCode();
+        $line .= $this->paymentLegCurrencyCode;
 
         // Payment Leg Currency Code
-        $line .= str_pad($transaction->getPaymentLegAmount(), 15, '0', STR_PAD_LEFT);
+        $line .= str_pad($this->paymentLegAmount, 15, '0', STR_PAD_LEFT);
 
         // Payment Leg Currency Code
-        $line .= str_pad($transaction->getFxRate(), 11, '0', STR_PAD_LEFT);
+        $line .= str_pad($this->fxRate, 11, '0', STR_PAD_LEFT);
 
         // Debit account BSB
-        $line .= $transaction->getDebitAccountBsb();
+        $line .= $this->debitAccountBsb;
 
         // Debit Account Number
-        $line .= str_pad($transaction->getDebitAccountNumber(), 35, ' ', STR_PAD_RIGHT);
+        $line .= str_pad($this->debitAccountNumber, 35, ' ', STR_PAD_RIGHT);
 
         // Debit Currency Code
-        $line .= $transaction->getDebitCurrencyCode();
+        $line .= $this->debitCurrencyCode;
 
         // Debit Amount
-        $line .= str_pad($transaction->getDebitAmount(), 15, '0', STR_PAD_LEFT);
+        $line .= str_pad($this->debitAmount, 15, '0', STR_PAD_LEFT);
 
         // Refinance Indicator
-        $line .= $transaction->getRefinanceIndicator();
+        $line .= $this->refinanceIndicator;
 
         // Text to NAB for PAY account
-        $line .= str_pad($transaction->getTextToNabForPayAccount(), 60, ' ', STR_PAD_RIGHT);
+        $line .= str_pad($this->textToNabForPayAccount, 60, ' ', STR_PAD_RIGHT);
 
         // FEC number
-        $line .= str_pad($transaction->getFecNumber(), 6, ' ', STR_PAD_RIGHT);
+        $line .= str_pad($this->fecNumber, 6, ' ', STR_PAD_RIGHT);
 
         // EFX number
-        $line .= str_pad($transaction->getEfxNumber(), 15, ' ', STR_PAD_RIGHT);
+        $line .= str_pad($this->efxNumber, 15, ' ', STR_PAD_RIGHT);
 
         $this->addLine($line);
     }
@@ -290,7 +289,7 @@ class NabAbaIntFileGenerator {
         $line .= str_pad($this->fileName, 20, ' ', STR_PAD_RIGHT);
 
         // File name
-        $line .= date('d-m-Y');
+        $line .= date('dmY');
 
         $this->addLine($line, false);
     }
@@ -311,7 +310,7 @@ class NabAbaIntFileGenerator {
             throw new Exception('Pay currency code is invalid. Must be capital letter abbreviation of length 3.');
         }
 
-        if (strlen($transaction->getPaymentAmount()) != 15) {
+        if (strlen($transaction->getPaymentAmount()) > 15) {
             throw new Exception('Payment amount length is incorrect');
         }
 
@@ -340,7 +339,7 @@ class NabAbaIntFileGenerator {
         }
 
         if (!preg_match('/^[0-9]{1,2}[0-9]{1,2}[0-9]{4}$/', $transaction->getRefinanceDate())) {
-            throw new Exception('Refinance date is invalid. Must be in php date:dmY format.');
+            throw new Exception('Refinance date:'. $transaction->getRefinanceDate().' is invalid. Must be in php date:dmY format.');
         }
 
         if (strlen($transaction->getAdditionalBeneficiaryInstructions1()) > 35 || strlen($transaction->getAdditionalBeneficiaryInstructions2()) > 35 || strlen($transaction->getAdditionalBeneficiaryInstructions3()) > 35 || strlen($transaction->getAdditionalBeneficiaryInstructions4()) > 35) {
@@ -392,7 +391,7 @@ class NabAbaIntFileGenerator {
             throw new Exception('Debit Currency Code should be all UPPER and length = 3');
         }
 
-        if (strlen($this->debitAmount) != 15) {
+        if (strlen($this->debitAmount) > 15) {
             throw new Exception('Debit amount is invalid');
         }
 
