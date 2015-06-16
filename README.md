@@ -1,4 +1,4 @@
-# ABA File Generator
+# ABA File Generator (Currently in dev mode. Use simonblee/aba-file-generator for aba file generations)
 
 ## Overview
 Generates an aba file for International transfers for NAB bank.

@@ -326,6 +326,14 @@ class NabAbaIntFileGenerator {
             throw new Exception('Beneficiary Address1 or Address2 or Address3 length is more than 35');
         }
 
+        if (strlen($transaction->getBeneficiaryAccountNumber()) > 34) {
+            throw new Exception('Account number is incorrect. Should be less then or equal to 34');
+        }
+
+        if (!preg_match('/^[A-Z]{2}$/', $transaction->getBeneficiaryBankCountryCode())) {
+            throw new Exception('Beneficiary country code is invalid. Must be capital letter abbreviation of length 2.');
+        }
+
         if ($this->refinanceIndicator == 1 && is_null($transaction->getRemitterName())) {
             throw new Exception('Remitter Name is Mandatory if the Refinance Indicator is set to ‘1’ in any of the Payment Detail records');
         }
